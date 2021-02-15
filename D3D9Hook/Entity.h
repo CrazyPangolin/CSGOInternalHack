@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 
+#include "csgo.hpp"
 #include "Math.h"
 
 #define STR_MERGE_IMPL(a, b) a##b
@@ -17,8 +18,9 @@ public:
     // be sure to put all the offsets you pad this way in a union
     union {
         //              Type     Name    Offset
-        DEFINE_MEMBER_N(vec3_f, pos, 0xA0);
-        DEFINE_MEMBER_N(uintptr_t, team_number, 0xF4);
+        DEFINE_MEMBER_N(uintptr_t, team_number, hazedumper::netvars::m_iTeamNum);
+        DEFINE_MEMBER_N(uintptr_t, health, hazedumper::netvars::m_iHealth);
+        DEFINE_MEMBER_N(vec3_f, pos, hazedumper::netvars::m_vecOrigin);
     };
 
 };
@@ -29,5 +31,3 @@ public:
     Entity* ent;
     char pad[12];
 };
-
-

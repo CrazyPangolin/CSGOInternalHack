@@ -79,3 +79,17 @@ void d3dhook::DrawFilledRect(int x, int y, int w, int h, D3DCOLOR color, IDirect
 	D3DRECT BarRect = { x, y, x + w, y + h };
 	dev->Clear(1, &BarRect, D3DCLEAR_TARGET | D3DCLEAR_TARGET, color, 0, 0);
 }
+
+void d3dhook::DrawLine(vec2 src, vec2 dst, float thickness, D3DCOLOR color, IDirect3DDevice9* dev)
+{
+	ID3DXLine* line;
+	D3DXCreateLine(dev, &line);
+
+	D3DXVECTOR2 line_points[2];
+	line_points[0] = D3DXVECTOR2(src.x, src.y);
+	line_points[1] = D3DXVECTOR2(dst.x, dst.y);
+
+	line->SetWidth(thickness);
+	line->Draw(line_points, 2, color);
+	line->Release();
+}
