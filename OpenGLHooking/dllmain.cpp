@@ -2,18 +2,51 @@
 #include <windows.h>
 #include <iostream>
 #include "Hook.h"
+#include "opengl_draw.h"
+
 
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 
 twglSwapBuffers owglSwapBuffers;
 twglSwapBuffers wglSwapBuffersGateway;
 
-BOOL __stdcall hkwglSwapBuffers(HDC hDc)
+
+
+GL::Font gl_font;
+const int FONT_HEIGHT = 15;
+const int FONT_WIDTH = 9;
+
+const char* example = "ESP Box";
+const char* example2 = "I'm inside fam";
+
+void Draw()
 {
-    std::cout << "Hooked" << std::endl;
-    return wglSwapBuffersGateway(hDc);
+    HDC current_hdc = wglGetCurrentDC();
+
+	if(!gl_font.bBuilt || current_hdc != gl_font.hdc)
+	{
+        gl_font.Build(FONT_HEIGHT);
+	}
+    GL::SetupOrtho();
+
+    GL::DrawOutline(300, 300, 200, 200, 2.0f, rgb::red);
+
+    float textPointX = gl_font.centerText(300, 200, strlen(example) * FONT_WIDTH);
+    float textPointY = 300 - FONT_HEIGHT / 2;
+    gl_font.Print(textPointX, textPointY, rgb::green, "%s", example);
+
+    GL::vec3 insideTextPoint = gl_font.centerText(300, 300 + 100, 200, 200, strlen(example2) * FONT_WIDTH, FONT_HEIGHT);
+    gl_font.Print(insideTextPoint.x, insideTextPoint.y, rgb::green, "%s", example2);
+
+    GL::RestoreGL();
+	
 }
 
+BOOL __stdcall hkwglSwapBuffers(HDC hDc)
+{
+    Draw();
+    return wglSwapBuffersGateway(hDc);
+}
 
 DWORD WINAPI HackThread(HMODULE h_module)
 {
@@ -32,6 +65,7 @@ DWORD WINAPI HackThread(HMODULE h_module)
     {
         if (GetAsyncKeyState(VK_END) & 1)
         {
+            SwapBuffersHook.Disable();
             break;
         }
         Sleep(1000);
