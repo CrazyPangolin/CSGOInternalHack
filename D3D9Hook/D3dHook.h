@@ -1,13 +1,15 @@
 #pragma once
 
 #include <Windows.h>
-#include "Hook.h"
 
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
 #include <d3d9.h>
 #include <d3dx9.h>
+
+#include "Hook.h"
+#include "Utils.h"
 
 typedef HRESULT(APIENTRY* tEndScene)(LPDIRECT3DDEVICE9 pDevice);
 
@@ -27,19 +29,11 @@ namespace  d3dhook
 		void* d3d9_device_[119];
 
 		Hook end_scene_hook;
-
-		
 		bool HookEndScene(BYTE* hkEndScene);
 		bool GetD3D9Device();
 		void DisableHook();
 		
 	};
-
-	
-	bool GetD3D9Device(D3dHook& d3d_hook);
-
-	HWND GetProcessWindow();
-	BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam);
 
 	void DrawFilledRect(int x, int y, int w, int h, D3DCOLOR color, IDirect3DDevice9* dev);
 }

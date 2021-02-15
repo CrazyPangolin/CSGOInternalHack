@@ -157,13 +157,21 @@
   <ItemGroup>
     <ClCompile Include="D3dHook.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Esp.cpp" />
     <ClCompile Include="Hook.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="mem.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3dHook.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Esp.h" />
     <ClInclude Include="Hook.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="mem.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

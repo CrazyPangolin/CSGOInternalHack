@@ -1,27 +1,5 @@
 #include "D3dHook.h"
 
-HWND window = NULL;
-
-BOOL CALLBACK d3dhook::EnumWindowsCallback(HWND handle, LPARAM lParam)
-{
-	DWORD wndProcId;
-	GetWindowThreadProcessId(handle, &wndProcId);
-
-	if (GetCurrentProcessId() != wndProcId)
-		return TRUE; // skip to next window
-
-	window = handle;
-	return FALSE; // window found abort search
-}
-
-
-HWND d3dhook::GetProcessWindow()
-{
-	window = NULL;
-	EnumWindows(EnumWindowsCallback, NULL);
-	return window;
-}
-
 
 bool d3dhook::D3dHook::GetD3D9Device()
 {
@@ -41,7 +19,7 @@ bool d3dhook::D3dHook::GetD3D9Device()
 	D3DPRESENT_PARAMETERS d3dpp = {};
 	d3dpp.Windowed = false;
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.hDeviceWindow = GetProcessWindow();
+	d3dpp.hDeviceWindow = utils::GetProcessWindow();
 
 	HRESULT dummyDeviceCreated = p_d3d->CreateDevice(D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,

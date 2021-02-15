@@ -27,6 +27,18 @@
     <ClCompile Include="mem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Esp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3dHook.h">
@@ -36,6 +48,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="mem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Esp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

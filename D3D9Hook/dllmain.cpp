@@ -3,9 +3,10 @@
 #include <iostream>
 
 #include"D3dHook.h"
-
+#include "Entity.h"
 
 d3dhook::D3dHook d3d_hook;
+
 
 HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 p_device)
 {
@@ -15,6 +16,12 @@ HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 p_device)
         d3d_hook.b_init_ = true;
     }
 
+
+    uintptr_t moduleBase = (uintptr_t)GetModuleHandle(L"client.dll");
+
+    EntityInfo* entity_list = (EntityInfo*)(moduleBase + 0x4DA2F44);
+
+	
     d3dhook::DrawFilledRect(200, 200, 200, 200, D3DCOLOR_ARGB(255, 255, 0, 0), p_device);
     //draw stuff here like so:
 
