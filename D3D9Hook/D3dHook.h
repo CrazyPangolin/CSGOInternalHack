@@ -35,8 +35,5 @@ namespace  d3dhook
 		void DisableHook();
 		
 	};
-
-	void DrawFilledRect(int x, int y, int w, int h, D3DCOLOR color, IDirect3DDevice9* dev);
-	void DrawLine(vec2 src, vec2 dst, float thickness, D3DCOLOR color, IDirect3DDevice9* dev);
 }
 

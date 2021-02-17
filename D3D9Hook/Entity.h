@@ -21,6 +21,8 @@ public:
         DEFINE_MEMBER_N(uintptr_t, team_number, hazedumper::netvars::m_iTeamNum);
         DEFINE_MEMBER_N(uintptr_t, health, hazedumper::netvars::m_iHealth);
         DEFINE_MEMBER_N(vec3_f, pos, hazedumper::netvars::m_vecOrigin);
+        DEFINE_MEMBER_N(BYTE, is_dormant, hazedumper::signatures::m_bDormant);
+        DEFINE_MEMBER_N(uintptr_t, bone_matrix, hazedumper::netvars::m_dwBoneMatrix);
     };
 
 };
