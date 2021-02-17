@@ -8,6 +8,8 @@
 
 struct vec2
 {
+	vec2() : x(0), y(0) { }
+	vec2(const int x_v, const int y_v) : x(x_v), y(y_v) { }
 	int x;
 	int y;
 };

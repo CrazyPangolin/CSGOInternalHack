@@ -25,21 +25,37 @@ private:
 	ID3DXLine* line_;
 
 
-	////Menu settings
-	//bool b_menu_;
-	//bool b_2Dbox_;
-	//bool b_snap_line_;
-	//bool b_skeleton_;
-	
+	//Menu settings
+	struct Settings {
+		bool b_show_menu_ = false;
+		bool b_box2d_ = false;
+		bool b_snap_line_ = false;
+		bool b_skeleton_ = false;
+	}settings;
+
+	struct Buttons
+	{
+		DWORD dw_show_menu_btn = VK_INSERT;
+		DWORD dw_snap_line_btn = VK_F2;
+		DWORD dw_box2d_btn = VK_F3;
+		DWORD dw_skeleton_btn = VK_F4;
+	}button;
+
 public:
 	Esp(uintptr_t module_base);
 	~Esp();
 	
 	bool Update();
-	bool DrawSnapLine(LPDIRECT3DDEVICE9 p_device);
+	void Draw(LPDIRECT3DDEVICE9 p_device);
 	bool DrawBonesIndex(LPDIRECT3DDEVICE9 p_device); // For Debug
+private:
+
+	bool DrawSnapLine(LPDIRECT3DDEVICE9 p_device);
 	bool DrawBonesSkeleton(LPDIRECT3DDEVICE9 p_device);
 	bool DrawEnt2dBox(LPDIRECT3DDEVICE9 p_device);
+	void ShowMenu(LPDIRECT3DDEVICE9 p_device);
+
+	void UpdateSettings();
 
 private:
 

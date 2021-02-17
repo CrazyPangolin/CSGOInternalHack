@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Esp::Esp(uintptr_t module_base): window_width_(0), window_height_(0), module_base_(module_base)
+Esp::Esp(uintptr_t module_base) : window_width_(0), window_height_(0), module_base_(module_base)
 {
 	memset(view_matrix_, 0, sizeof(view_matrix_));
 	game_window_ = utils::GetProcessWindow();
@@ -10,11 +10,11 @@ Esp::Esp(uintptr_t module_base): window_width_(0), window_height_(0), module_bas
 }
 Esp::~Esp()
 {
-	if(font_!=nullptr)
+	if (font_ != nullptr)
 	{
 		font_->Release();
 	}
-	if(line_ != nullptr)
+	if (line_ != nullptr)
 	{
 		line_->Release();
 	}
@@ -23,14 +23,14 @@ Esp::~Esp()
 bool Esp::Update()
 {
 	RECT window_rect;
-	if(!GetClientRect(game_window_, &window_rect))
+	if (!GetWindowRect(game_window_, &window_rect))
 	{
 		return false;
 	}
-	
+
 	window_width_ = window_rect.right - window_rect.left;
 	window_height_ = window_rect.bottom - window_rect.top;
-	if(window_width_ * window_height_ < 100)
+	if (window_width_ * window_height_ < 100)
 	{
 		return false;
 	}
@@ -68,7 +68,7 @@ bool Esp::WorldToScreen(vec3_f pos, vec2& screen)
 bool Esp::DrawSnapLine(LPDIRECT3DDEVICE9 p_device)
 {
 	entity_list_ = (EntityInfo*)(module_base_ + 0x4DA2F44);
-	if(!entity_list_[0].ent)
+	if (!entity_list_[0].ent)
 	{
 		return false;
 	}
@@ -77,9 +77,9 @@ bool Esp::DrawSnapLine(LPDIRECT3DDEVICE9 p_device)
 	int i = 0;
 	vec2 self_screen_pos;
 	WorldToScreen(self_position, self_screen_pos);
-	while(entity_list_[i].ent)
+	while (entity_list_[i].ent)
 	{
-		if(CheakAvailable(*(entity_list_[i].ent)))
+		if (CheakAvailable(*(entity_list_[i].ent)))
 		{
 			vec3_f target_position = entity_list_[i].ent->pos;
 			vec2 target_screen_pos;
@@ -102,7 +102,7 @@ bool Esp::DrawSnapLine(LPDIRECT3DDEVICE9 p_device)
 
 bool Esp::CheakAvailable(const Entity ent) const
 {
-	if(ent.health == 0 || ent.is_dormant == 1)
+	if (ent.health == 0 || ent.is_dormant == 1)
 	{
 		return false;
 	}
@@ -127,16 +127,16 @@ vec3_f Esp::GetBonePos(Entity* ent, int bone_idx)
 bool Esp::DrawBonesIndex(LPDIRECT3DDEVICE9 p_device)
 {
 	entity_list_ = (EntityInfo*)(module_base_ + 0x4DA2F44);
-	
+
 	if (!entity_list_[0].ent || (entity_list_[0].ent->health <= 0))
 	{
 		return false;
 	}
 	size_t ent_idx = 1;
-	
+
 	while (entity_list_[ent_idx].ent)
 	{
-		for (size_t bone_idx = 0;  bone_idx < 94; bone_idx++)
+		for (size_t bone_idx = 0; bone_idx < 94; bone_idx++)
 		{
 			if (CheakAvailable(*(entity_list_[ent_idx].ent)))
 			{
@@ -145,7 +145,7 @@ bool Esp::DrawBonesIndex(LPDIRECT3DDEVICE9 p_device)
 				WorldToScreen(bone_pos, bone_screen_pos);
 				char bone_index_str[25];
 				sprintf_s(bone_index_str, "%d", bone_idx);
-				
+
 				DrawText(bone_index_str, bone_screen_pos, D3DCOLOR_ARGB(255, 0, 255, 0), p_device);
 			}
 
@@ -249,7 +249,7 @@ bool Esp::DrawEnt2dBox(LPDIRECT3DDEVICE9 p_device)
 	}
 	size_t ent_idx = 1;
 	const uintptr_t self_team_num = local_player_->team_number;
-	
+
 	while (entity_list_[ent_idx].ent)
 	{
 		if (CheakAvailable(*(entity_list_[ent_idx].ent)))
@@ -270,7 +270,7 @@ bool Esp::DrawEnt2dBox(LPDIRECT3DDEVICE9 p_device)
 			{
 				color = D3DCOLOR_ARGB(255, 255, 0, 0);
 			}
-			
+
 			DrawBox2D(head_screen_pos, foot_screen_pos, 2, color, p_device);
 
 			int height = abs(foot_screen_pos.y - head_screen_pos.y);
@@ -279,9 +279,9 @@ bool Esp::DrawEnt2dBox(LPDIRECT3DDEVICE9 p_device)
 			vec2 top_health;
 			float health_percent = entity_list_[ent_idx].ent->health / 100.f;
 			int health_height = height * health_percent;
-			
+
 			bot_health.x = foot_screen_pos.x - (height / 4) - 2;
-			top_health.x = head_screen_pos.x - (height / 4) - 2 - (dx * (1- health_percent));
+			top_health.x = head_screen_pos.x - (height / 4) - 2 - (dx * (1 - health_percent));
 
 			bot_health.y = foot_screen_pos.y;
 			top_health.y = foot_screen_pos.y - health_height;
@@ -295,38 +295,20 @@ bool Esp::DrawEnt2dBox(LPDIRECT3DDEVICE9 p_device)
 
 
 
-
-void Esp::DrawText(const char* text, vec2 pos, D3DCOLOR color, IDirect3DDevice9* dev)
-{
-	RECT rect;
-	if(!font_)
-	{
-		D3DXCreateFont(dev, 14, 0, FW_NORMAL, 1, false, DEFAULT_CHARSET,
-			OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &font_);
-	}
-
-	SetRect(&rect, pos.x + 1, pos.y + 1, pos.x + 1, pos.y + 1);
-	font_->DrawTextA(NULL, text, -1, &rect, DT_CENTER | DT_NOCLIP, D3DCOLOR_ARGB(255, 0, 0, 0));
-
-	SetRect(&rect, pos.x, pos.y, pos.x, pos.y);
-	font_->DrawTextA(NULL, text, -1, &rect, DT_CENTER | DT_NOCLIP, color);
-	
-}
-
 void  Esp::DrawLines(std::vector<vec2> pointers, int thickness, D3DCOLOR color, IDirect3DDevice9* dev) {
 	if (pointers.size() < 2)
 	{
 		return;
 	}
-	for(size_t pointer_idx= 0; pointer_idx < pointers.size()-1; pointer_idx++)
+	for (size_t pointer_idx = 0; pointer_idx < pointers.size() - 1; pointer_idx++)
 	{
-		DrawLine(pointers[pointer_idx], pointers[pointer_idx+1], thickness, color, dev);
+		DrawLine(pointers[pointer_idx], pointers[pointer_idx + 1], thickness, color, dev);
 	}
 }
 
 void  Esp::DrawLine(vec2 src, vec2 dst, int thickness, D3DCOLOR color, IDirect3DDevice9* dev)
 {
-	if(src.x > window_width_ || src.x < 0 ||
+	if (src.x > window_width_ || src.x < 0 ||
 		src.y > window_height_ || src.y < 0 ||
 		dst.x > window_width_ || dst.x < 0 ||
 		dst.y > window_height_ || dst.y < 0)
@@ -343,6 +325,89 @@ void  Esp::DrawLine(vec2 src, vec2 dst, int thickness, D3DCOLOR color, IDirect3D
 
 	line_->SetWidth(thickness);
 	line_->Draw(line_pointers, 2, color);
+}
+
+void Esp::DrawText(const char* text, vec2 pos, D3DCOLOR color, IDirect3DDevice9* dev)
+{
+	RECT rect;
+	if (!font_)
+	{
+		D3DXCreateFont(dev, 14, 0, FW_NORMAL, 1, false, DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &font_);
+	}
+
+	SetRect(&rect, pos.x + 1, pos.y + 1, pos.x + 1, pos.y + 1);
+	font_->DrawTextA(NULL, text, -1, &rect, DT_CENTER | DT_NOCLIP, D3DCOLOR_ARGB(255, 0, 0, 0));
+
+	SetRect(&rect, pos.x, pos.y, pos.x, pos.y);
+	font_->DrawTextA(NULL, text, -1, &rect, DT_CENTER | DT_NOCLIP, color);
+
+}
+
+void Esp::Draw(LPDIRECT3DDEVICE9 p_device)
+{
+	UpdateSettings();
+	if (settings.b_show_menu_)
+	{
+		D3DCOLOR menu_off_color = D3DCOLOR_ARGB(255, 0, 255, 0);
+		D3DCOLOR menu_on_color = D3DCOLOR_ARGB(255, 255, 0, 0);
+		int menu_offset_x = window_width_ / 2;
+		int menu_offset_y = 50;
+		DrawText("Show Menu (INS)", vec2(menu_offset_x, menu_offset_y), menu_on_color, p_device);
+		if (settings.b_snap_line_)
+		{
+			DrawText("Snaplines (F2)", vec2(menu_offset_x, menu_offset_y + 1 * 12), menu_on_color, p_device);
+		}
+		else
+		{
+			DrawText("Snaplines (F2)", vec2(menu_offset_x, menu_offset_y + 1 * 12), menu_off_color, p_device);
+		}
+
+		if (settings.b_box2d_)
+		{
+			DrawText("2D Box (F3)", vec2(menu_offset_x, menu_offset_y + 2 * 12), menu_on_color, p_device);
+		}
+		else
+		{
+			DrawText("2D Box (F3)", vec2(menu_offset_x, menu_offset_y + 2 * 12), menu_off_color, p_device);
+		}
+		if (settings.b_skeleton_)
+		{
+			DrawText("Skeleton (F4)", vec2(menu_offset_x, menu_offset_y + 3 * 12), menu_on_color, p_device);
+		}
+		else
+		{
+			DrawText("Skeleton (F4)", vec2(menu_offset_x, menu_offset_y + 3 * 12), menu_off_color, p_device);
+		}
+	}
+
+	if (settings.b_snap_line_)
+	{
+		DrawSnapLine(p_device);
+	}
+
+	if (settings.b_box2d_)
+	{
+		DrawEnt2dBox(p_device);
+	}
+
+	if (settings.b_skeleton_)
+	{
+		DrawBonesSkeleton(p_device);
+	}
+
+}
+
+void Esp::UpdateSettings()
+{
+	if (GetAsyncKeyState(button.dw_show_menu_btn) & 1)
+		settings.b_show_menu_ = !settings.b_show_menu_;
+	if (GetAsyncKeyState(button.dw_snap_line_btn) & 1)
+		settings.b_snap_line_ = !settings.b_snap_line_;
+	if (GetAsyncKeyState(button.dw_box2d_btn) & 1)
+		settings.b_box2d_ = !settings.b_box2d_;
+	if (GetAsyncKeyState(button.dw_skeleton_btn) & 1)
+		settings.b_skeleton_ = !settings.b_skeleton_;
 }
 
 

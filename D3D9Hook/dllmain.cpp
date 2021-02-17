@@ -22,10 +22,7 @@ HRESULT APIENTRY hkEndScene(LPDIRECT3DDEVICE9 p_device)
 
     esp.Update();
     //draw stuff here like so:
-	
-    //esp.DrawBonesSkeleton(p_device);
-    //esp.DrawEnt2dBox(p_device);
-    esp.DrawSnapLine(p_device);
+    esp.Draw(p_device);
 	
     return d3d_hook.o_end_scene_(p_device);
 }
